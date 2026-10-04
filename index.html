@@ -10,7 +10,7 @@ function quickStatus(t){const e=document.getElementById('quickStatus');if(e)e.te
 <style>
 body{margin:0;background:#0f1319;color:#eef2f7;font:15px Arial}main{max-width:1100px;margin:auto;padding:14px}.card{background:#181e27;border:1px solid #303a47;border-radius:14px;padding:16px;margin:12px 0}input,textarea,select{width:100%;box-sizing:border-box;background:#0d1117;color:#fff;border:1px solid #3a4655;border-radius:9px;padding:11px;margin:5px 0}button{background:#263241;color:#fff;border:0;border-radius:9px;padding:11px 14px;margin:4px;cursor:pointer}.main{background:#8a6b2f}.ok{color:#76d69a}.warn{color:#ffd166}.err{color:#ff8080}.small{font-size:12px;color:#a7b0bc}table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid #303844;padding:8px;text-align:left}.pill{display:inline-block;padding:4px 7px;border-radius:8px;background:#252e3a;margin:2px}.scroll{overflow:auto}
 .quick{background:#111923;border:2px solid #8a6b2f;border-radius:18px;padding:16px;margin:14px 0}.quick h2{margin:0 0 6px}.quick p{margin:4px 0 12px;color:#a7b0bc}.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.qbox{background:#0b1016;border:1px solid #3a4655;border-radius:14px;padding:14px}.qbox b{display:block;font-size:17px;margin-bottom:6px}.qbox input{min-height:48px}.qbtn{display:block;width:100%;padding:14px;font-size:16px;background:#8a6b2f;color:#fff;border:0;border-radius:10px;margin-top:7px}@media(max-width:700px){.qgrid{grid-template-columns:1fr}.quick{padding:12px}}</style></head><body><main>
-<h1>AI Сметчик PRO v31</h1><div class="small">Единый агент: документы → распознавание → параметры → технологии → прайс → расчёт → проверка</div><div class="quick"><h2>🚀 С чего начать</h2><p>Здесь сразу видны две главные загрузки. После выбора файла нажмите кнопку под ним.</p><div class="qgrid"><div class="qbox"><b>📐 1. Чертёж / PDF / фото</b><label class="qbtn" style="display:block;text-align:center;box-sizing:border-box">📐 ВЫБРАТЬ ЧЕРТЁЖ / PDF / ФОТО<input id="docs" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.txt" style="display:none" onchange="quickStatus('📐 Выбрано документов: '+this.files.length+' — '+Array.from(this.files).map(f=>f.name).join(', '))"></label><button class="qbtn" onclick="analyzeDocs()">🔎 РАСПОЗНАТЬ ЧЕРТЁЖ</button></div><div class="qbox"><b>💰 2. Ваш прайс Excel / CSV</b><label class="qbtn" style="display:block;text-align:center;box-sizing:border-box">💰 ВЫБРАТЬ ПРАЙС<input id="priceFile" type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="quickStatus('💰 Выбран прайс: '+(this.files[0]?.name||''))"></label><button type="button" id="importPriceBtn" class="qbtn" onclick="document.getElementById('priceQuickResult').innerHTML='⏳ Кнопка нажата. Запускаю чтение…'; try{if(typeof window.importPrice!=='function')throw new Error('Функция загрузки прайса не запустилась. Обновляю модуль…'); window.importPrice()}catch(e){document.getElementById('priceQuickResult').innerHTML='<span class=&quot;err&quot;>❌ Ошибка: '+String(e.message||e)+'</span>'}">💰 ЗАГРУЗИТЬ ПРАЙС</button><div id="priceQuickResult" class="small" style="margin-top:8px"></div></div></div><div id="quickStatus" class="small" style="margin-top:10px">Файлы пока не выбраны.</div></div>
+<h1>AI Сметчик PRO v31</h1><div class="small">Единый агент: документы → распознавание → параметры → технологии → прайс → расчёт → проверка</div><div class="quick"><h2>🚀 С чего начать</h2><p>Здесь сразу видны две главные загрузки. После выбора файла нажмите кнопку под ним.</p><div class="qgrid"><div class="qbox"><b>📐 1. Чертёж / PDF / фото</b><label class="qbtn" style="display:block;text-align:center;box-sizing:border-box">📐 ВЫБРАТЬ ЧЕРТЁЖ / PDF / ФОТО<input id="docs" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.txt" style="display:none" onchange="quickStatus('📐 Выбрано документов: '+this.files.length+' — '+Array.from(this.files).map(f=>f.name).join(', '))"></label><button class="qbtn" onclick="analyzeDocs()">🔎 РАСПОЗНАТЬ ЧЕРТЁЖ</button></div><div class="qbox"><b>💰 2. Ваш прайс Excel / CSV</b><label class="qbtn" style="display:block;text-align:center;box-sizing:border-box">💰 ВЫБРАТЬ ПРАЙС<input id="priceFile" type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="quickStatus('💰 Выбран прайс: '+(this.files[0]?.name||''))"></label><button type="button" id="importPriceBtn" class="qbtn" onclick="try{window.importPriceStandalone()}catch(e){document.getElementById('priceQuickResult').innerHTML='<span class=&quot;err&quot;>❌ Ошибка: '+String(e.message||e)+'</span>'}">💰 ЗАГРУЗИТЬ ПРАЙС</button><div id="priceQuickResult" class="small" style="margin-top:8px"></div></div></div><div id="quickStatus" class="small" style="margin-top:10px">Файлы пока не выбраны.</div></div>
 <div class="card"><h2>📁 Проект</h2><input id="project" placeholder="Название проекта"><input id="client" placeholder="Клиент"><input id="address" placeholder="Адрес"><textarea id="desc" rows="6" placeholder="Можно вставить ТЗ вручную. Например: столешница 2400×700×30 мм, остров 1800×900×30 мм, мрамор, монтаж, доставка, такелаж."></textarea>
 <div class="small">Документы загружаются в блоке «С чего начать» выше.</div><span id="docStatus" class="small"></span><div id="docResult"></div></div>
 <div class="card"><h2>💰 Прайс</h2><button onclick="priceTemplate()">Шаблон CSV</button><div class="small">Агент ищет заголовки на первых 30 строках. Поддерживает «Наименование / Материал / Работа / Позиция» и «Цена / Стоимость / Тариф / Расценка». Если структура нестандартная, покажет диагностику.</div><div id="priceInfo"></div><div id="priceTable"></div></div>
@@ -42,7 +42,93 @@ function saveProject(){const total=S.estimate.reduce((a,x)=>a+x.qty*x.price,0);S
 function backup(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.download='AI-Smetchik-PRO-v31-backup.json';a.click()}
 function restore(){const f=$('restore').files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);Object.assign(S,x);persist();renderPrice();renderFindings();renderEstimate();alert('База восстановлена')}catch(e){alert('Ошибка JSON')}};r.readAsText(f)}
 function priceTemplate(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['Наименование;Ед.;Цена;Себестоимость\nНатуральный камень;м2;0;0\nОбработка кромки;м.п.;0;0\nОграждение нержавейка;м.п.;0;0\nТакелажные работы;компл.;0;0\nДоставка;рейс;0;0\nМонтаж;компл.;0;0'],{type:'text/csv;charset=utf-8'}));a.download='price-template.csv';a.click()}
-function printEstimate(){const w=open('','_blank');if(!w){alert('Разрешите всплывающие окна');return}w.document.write('<html><meta charset="utf-8"><body><h2>AI Сметчик PRO</h2>'+document.querySelector('.scroll').innerHTML+'<h2>'+esc($('total').textContent)+'</h2><script>print()<\\/script></body></html>');w.document.close()}
+function printEstimate(){const w=open('','_blank');if(!w){alert('Разрешите всплывающие окна');return}w.document.write('<html><meta charset="utf-8"><body><h2>AI Сметчик PRO</h2>'+document.querySelector('.scroll').innerHTML+'<h2>'+esc($('total').textContent)+'</h2><script>print()<\\/script><script>
+window.importPriceStandalone=async function(){
+  const q=document.getElementById('priceQuickResult'), info=document.getElementById('priceInfo'), f=document.getElementById('priceFile')?.files?.[0];
+  if(q)q.innerHTML='⏳ Читаю Excel…';
+  if(!f){if(q)q.innerHTML='<span class="err">❌ Сначала выберите Excel/CSV.</span>';return}
+  try{
+    if(typeof XLSX==='undefined')throw new Error('Библиотека Excel XLSX не загрузилась');
+    let wb;
+    if(/\.csv$/i.test(f.name)){
+      const txt=await f.text();
+      wb=XLSX.read(txt,{type:'string'});
+    }else{
+      wb=XLSX.read(await f.arrayBuffer(),{type:'array',raw:false,cellDates:false});
+    }
+    const result=[];
+    const details=[];
+    const norm2=v=>String(v??'').toLowerCase().replace(/ё/g,'е').replace(/[^a-zа-я0-9]+/gi,' ').trim();
+    const num2=v=>{
+      if(typeof v==='number'&&isFinite(v))return v;
+      let s=String(v??'').replace(/\u00a0/g,' ').replace(/\s/g,'').replace(/,/g,'.').replace(/[^0-9.\-]/g,'');
+      if(!s)return null;
+      const n=Number(s);return isFinite(n)?n:null;
+    };
+    const nameWords=['наименование','название','материал','работа','работы','позиция','услуга','описание','товар','изделие','вид работ'];
+    const priceWords=['цена','стоимость','тариф','расценка','розничная','продажная','цена за','сумма'];
+    for(const sn of wb.SheetNames){
+      const ws=wb.Sheets[sn];
+      const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false});
+      let best=null;
+      for(let r=0;r<Math.min(100,rows.length);r++){
+        const row=rows[r]||[];
+        for(let a=0;a<row.length;a++){
+          const h=norm2(row[a]);
+          if(!h)continue;
+          let ns=nameWords.some(w=>h.includes(w));
+          if(!ns)continue;
+          for(let b=0;b<row.length;b++){
+            if(a===b)continue;
+            const hp=norm2(row[b]);
+            if(priceWords.some(w=>hp.includes(w))){best={r,nc:a,pc:b};break}
+          }
+          if(best)break;
+        }
+        if(best)break;
+      }
+      if(!best){
+        let bestScore=-1;
+        for(let a=0;a<Math.min(20,(rows[0]||[]).length);a++){
+          let textCount=0,numCount=0;
+          for(let r=0;r<Math.min(rows.length,200);r++){
+            const v=rows[r]?.[a];
+            if(String(v??'').trim().length>=3)textCount++;
+            if(num2(v)!==null)numCount++;
+          }
+          const score=textCount*1.5+numCount*.2;
+          if(score>bestScore){bestScore=score;best={r:0,nc:a,pc:-1}}
+        }
+        for(let b=0;b<(rows[0]||[]).length;b++){
+          let nums=0;
+          for(let r=1;r<Math.min(rows.length,200);r++)if(num2(rows[r]?.[b])!==null)nums++;
+          if(nums>5){best.pc=b;break}
+        }
+      }
+      if(!best||best.pc<0){details.push(sn+': не удалось определить колонку цены');continue}
+      let count=0;
+      for(let r=best.r+1;r<rows.length;r++){
+        const row=rows[r]||[], name=String(row[best.nc]??'').trim(), price=num2(row[best.pc]);
+        if(name&&price!==null){result.push({name,unit:'шт',price,sheet:sn,row:r+1});count++}
+      }
+      details.push(sn+': найдено '+count+' позиций; название колонка '+(best.nc+1)+', цена колонка '+(best.pc+1));
+    }
+    if(!result.length){
+      if(q)q.innerHTML='<span class="err">❌ Не найдено ни одной позиции.</span><br>'+details.map(x=>x.replace(/</g,'&lt;')).join('<br>');
+      return;
+    }
+    try{
+      const state=JSON.parse(localStorage.getItem('ai_smetchik_pro_v31')||'{}');
+      state.prices=result;localStorage.setItem('ai_smetchik_pro_v31',JSON.stringify(state));
+    }catch(_){}
+    if(info)info.innerHTML='<span class="ok">✓ Загружено '+result.length+' позиций.</span>';
+    if(q)q.innerHTML='<span class="ok">✓ Прайс прочитан: '+result.length+' позиций.</span><br>'+details.map(x=>x.replace(/</g,'&lt;')).join('<br>');
+    const st=document.getElementById('quickStatus');if(st)st.textContent='✅ Прайс загружен: '+result.length+' позиций';
+  }catch(e){
+    if(q)q.innerHTML='<span class="err">❌ Ошибка Excel: '+String(e.message||e).replace(/</g,'&lt;')+'</span>';
+  }
+};
+</script></body></html>');w.document.close()}
 renderPrice();renderFindings();renderEstimate();
 window.addEventListener('error',function(e){var q=document.getElementById('priceQuickResult');if(q)q.innerHTML='<span class="err">❌ Ошибка JavaScript: '+String(e.message||e.error||e)+'</span>';});
 </script></body></html>
