@@ -40,19 +40,17 @@ function validate(){const no=S.estimate.filter(x=>!x.price);$('warnings').innerH
 function makePurchases(){const rx=/камень|мрамор|гранит|оникс|нержав|aisi|профил|труба|лист|креп|клей|гермет|абраз|сталь/i;const map={};S.estimate.filter(x=>rx.test(x.name)).forEach(x=>{const k=norm(x.name)+'|'+x.unit;(map[k]??={name:x.name,unit:x.unit,qty:0});map[k].qty+=x.qty});S.purchases=Object.values(map);persist();$('purchases').innerHTML=S.purchases.length?'<table><tr><th>Материал</th><th>Ед.</th><th>Кол.</th></tr>'+S.purchases.map(x=>'<tr><td>'+esc(x.name)+'</td><td>'+esc(x.unit)+'</td><td>'+x.qty.toFixed(3)+'</td></tr>').join('')+'</table>':'Нет закупок.'}
 function saveProject(){const total=S.estimate.reduce((a,x)=>a+x.qty*x.price,0);S.projects.unshift({id:'PRJ-'+Date.now(),project:$('project').value,client:$('client').value,address:$('address').value,total,date:new Date().toLocaleString('ru-RU'),estimate:S.estimate});persist();alert('Проект сохранён')}
 function backup(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.download='AI-Smetchik-PRO-v31-backup.json';a.click()}
-function restore(){const f=$('restore').files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);Object.assign(S,x);persist();window.importPrice=importPrice;
-document.addEventListener('DOMContentLoaded',function(){
-  const b=document.getElementById('importPriceBtn');
-  if(b)b.addEventListener('click',function(){
-    const q=document.getElementById('priceQuickResult');
-    if(q)q.innerHTML='⏳ Кнопка сработала. Читаю Excel…';
-    Promise.resolve(importPrice()).catch(function(e){
-      if(q)q.innerHTML='<span class="err">❌ Ошибка запуска: '+String(e.message||e)+'</span>';
-    });
-  });
-});
-renderPrice();renderFindings();renderEstimate();alert('База восстановлена')}catch(e){alert('Ошибка JSON')}};r.readAsText(f)}
+function restore(){const f=$('restore').files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);Object.assign(S,x);persist();renderPrice();renderFindings();renderEstimate();alert('База восстановлена')}catch(e){alert('Ошибка JSON')}};r.readAsText(f)}
 function priceTemplate(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['Наименование;Ед.;Цена;Себестоимость\nНатуральный камень;м2;0;0\nОбработка кромки;м.п.;0;0\nОграждение нержавейка;м.п.;0;0\nТакелажные работы;компл.;0;0\nДоставка;рейс;0;0\nМонтаж;компл.;0;0'],{type:'text/csv;charset=utf-8'}));a.download='price-template.csv';a.click()}
 function printEstimate(){const w=open('','_blank');if(!w){alert('Разрешите всплывающие окна');return}w.document.write('<html><meta charset="utf-8"><body><h2>AI Сметчик PRO</h2>'+document.querySelector('.scroll').innerHTML+'<h2>'+esc($('total').textContent)+'</h2><script>print()<\\/script></body></html>');w.document.close()}
+window.importPrice=importPrice;
+const importPriceBtn=document.getElementById('importPriceBtn');
+if(importPriceBtn)importPriceBtn.addEventListener('click',function(){
+  const q=document.getElementById('priceQuickResult');
+  if(q)q.innerHTML='⏳ Кнопка сработала. Читаю Excel…';
+  importPrice().catch(function(e){
+    if(q)q.innerHTML='<span class="err">❌ Ошибка запуска: '+String(e.message||e)+'</span>';
+  });
+});
 renderPrice();renderFindings();renderEstimate();
 </script></body></html>
